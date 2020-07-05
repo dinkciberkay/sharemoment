@@ -14,27 +14,26 @@ class RegisterPage extends Component {
             displayName: null,
             password: null,
             passwordRepeat: null,
-            pendingApiCall: false
+            pendingApiCall: false,
+            errors: {}
         }
     }
 
     onChangeTextArea = (event) => {
         const {name, value} = event.target;
-        this.setState({[name]: value})
+        const errors = {...this.state.errors};
+        errors[name] = undefined;
+        this.setState({
+            [name]: value,
+            errors
+        })
     };
 
     register = async event => {
         event.preventDefault();
-
         const {userName, displayName, password} = this.state;
-        // const body = {
-        //     userName: userName,
-        //     displayName: displayName,
-        //     password: password
-        // };
-
         this.setState({pendingApiCall: true});
-        // İsimlendirmeler aynı olduğu zaman bu şekilde kullanılabilir
+
         const body = {
             userName,
             displayName,
@@ -43,36 +42,40 @@ class RegisterPage extends Component {
 
         try {
             const response = await userRegister(body);
-        } catch (e) {
-
+        } catch (error) {
+            if (error.response.data.validationErrors) {
+                this.setState({errors: error.response.data.validationErrors})
+            }
         }
-
         this.setState({pendingApiCall: false})
 
     };
 
     render() {
-        const {pendingApiCall} = this.state;
+        const {pendingApiCall, errors} = this.state;
+        const {userName, displayName} = errors;
         return (
             <div className="container">
                 <br/>
                 <form>
                     <h1 className="text-center">Sign Up</h1>
                     <div className="text-left">
-                        <label>Username</label>
+                        <label>User Name</label>
                         <InputText
-                            className="form-control"
+                            className={userName ? 'form-control is-invalid' : 'form-control'}
                             name="userName"
                             value={this.state.userName}
                             onChange={this.onChangeTextArea}/>
+                        <div className="invalid-feedback">{userName}</div>
                     </div>
                     <div className="text-left">
                         <label>Display Name</label>
                         <InputText
-                            className="form-control"
+                            className={displayName ? 'form-control is-invalid' : 'form-control'}
                             label="Display Name" name="displayName"
                             value={this.state.displayName}
                             onChange={this.onChangeTextArea}/>
+                        <div className="invalid-feedback">{displayName}</div>
                     </div>
                     <div className="text-left">
                         <label>Password</label>
