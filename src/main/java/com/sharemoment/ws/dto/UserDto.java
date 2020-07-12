@@ -1,5 +1,6 @@
 package com.sharemoment.ws.dto;
 
+import com.sharemoment.ws.UniqueUsername;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ public class UserDto {
 
     @NotNull
     @Size(min = 4, max = 255)
+    @UniqueUsername
     private String userName;
 
     @NotNull

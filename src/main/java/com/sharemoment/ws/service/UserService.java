@@ -1,7 +1,7 @@
 package com.sharemoment.ws.service;
 
 import com.sharemoment.ws.GenericResponse;
-import com.sharemoment.ws.UserRepository;
+import com.sharemoment.ws.repository.UserRepository;
 import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
