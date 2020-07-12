@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {userRegister} from '../service/RegisterService'
+import Input from "./Input";
 
 
 class RegisterPage extends Component {
@@ -53,37 +54,33 @@ class RegisterPage extends Component {
 
     render() {
         const {pendingApiCall, errors} = this.state;
-        const {userName, displayName} = errors;
+        const {userName, displayName, password} = errors;
         return (
             <div className="container">
                 <br/>
                 <form>
                     <h1 className="text-center">Sign Up</h1>
+                    {/* Input Component 'ini kendimiz Custom bir component haline getirdik*/}
                     <div className="text-left">
                         <label>User Name</label>
-                        <InputText
-                            className={userName ? 'form-control is-invalid' : 'form-control'}
-                            name="userName"
-                            value={this.state.userName}
-                            onChange={this.onChangeTextArea}/>
-                        <div className="invalid-feedback">{userName}</div>
+                        <Input name="userName"
+                               value={this.state.userName}
+                               error={userName}
+                               onChange={this.onChangeTextArea}/>
                     </div>
                     <div className="text-left">
                         <label>Display Name</label>
-                        <InputText
-                            className={displayName ? 'form-control is-invalid' : 'form-control'}
-                            label="Display Name" name="displayName"
-                            value={this.state.displayName}
-                            onChange={this.onChangeTextArea}/>
-                        <div className="invalid-feedback">{displayName}</div>
+                        <Input name="displayName"
+                               value={this.state.displayName}
+                               error={displayName}
+                               onChange={this.onChangeTextArea}/>
                     </div>
                     <div className="text-left">
                         <label>Password</label>
-                        <InputText
-                            className="form-control"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="password"
+                               value={this.state.password}
+                               error={password}
+                               onChange={this.onChangeTextArea}/>
                     </div>
                     <div className="text-left">
                         <label>Password Repeat</label>

@@ -1,14 +1,20 @@
 package com.sharemoment.ws.controller;
 
+import com.sharemoment.error.ApiError;
+import com.sharemoment.ws.GenericResponse;
 import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -23,7 +29,19 @@ public class UserController {
     }
 
     @PostMapping("/api/users")
-    public ResponseEntity<?> createNewUser(@RequestBody UserDto userDto) {
+    public GenericResponse createNewUser(@Valid @RequestBody UserDto userDto) {
         return userService.createNewUser(userDto);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleValidationException(MethodArgumentNotValidException exception) {
+        ApiError apiError = new ApiError(400, "Validation Error", "/api/users");
+        Map<String, String> validationErrors = new HashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        apiError.setValidationErrors(validationErrors);
+        return apiError;
     }
 }
