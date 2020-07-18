@@ -24,6 +24,15 @@ class RegisterPage extends Component {
         const {name, value} = event.target;
         const errors = {...this.state.errors};
         errors[name] = undefined;
+        if (name === 'password' || name === 'passwordRepeat') {
+            if (name === 'password' && value !== this.state.passwordRepeat) {
+                errors.passwordRepeat = 'Password Mismatch';
+            } else if (name === 'passwordRepeat' && value !== this.state.password) {
+                errors.passwordRepeat = 'Password Mismatch';
+            } else {
+                errors.passwordRepeat = undefined;
+            }
+        }
         this.setState({
             [name]: value,
             errors
@@ -54,7 +63,7 @@ class RegisterPage extends Component {
 
     render() {
         const {pendingApiCall, errors} = this.state;
-        const {userName, displayName, password} = errors;
+        const {userName, displayName, password, passwordRepeat} = errors;
         return (
             <div className="container">
                 <br/>
@@ -62,12 +71,13 @@ class RegisterPage extends Component {
                     <h1 className="text-center">Sign Up</h1>
                     {/* Input Component 'ini kendimiz Custom bir component haline getirdik*/}
                     <div className="text-left">
-                        <label>User Name</label>
+                        <label>Username</label>
                         <Input name="userName"
                                value={this.state.userName}
                                error={userName}
                                onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Display Name</label>
                         <Input name="displayName"
@@ -75,6 +85,7 @@ class RegisterPage extends Component {
                                error={displayName}
                                onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Password</label>
                         <Input name="password"
@@ -82,20 +93,20 @@ class RegisterPage extends Component {
                                error={password}
                                onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Password Repeat</label>
-                        <InputText
-                            className="form-control"
-                            name="passwordRepeat"
-                            value={this.state.passwordRepeat}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="passwordRepeat"
+                               value={this.state.passwordRepeat}
+                               error={passwordRepeat}
+                               onChange={this.onChangeTextArea}/>
                     </div>
                     <br/>
                     <div className="text-center">
                         <Button
                             className="btn btn-primary"
                             label="Register" onClick={this.register}
-                            disabled={pendingApiCall}>
+                            disabled={passwordRepeat !== undefined || pendingApiCall}>
                             {/*{this.state.pendingApiCall && <ProgressSpinner className="p-progress-circle"/>}*/}
                             {pendingApiCall && <span className="spinner-border spinner-border-sm"/>}
                         </Button>
