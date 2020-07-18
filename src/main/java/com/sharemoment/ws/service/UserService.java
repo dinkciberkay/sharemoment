@@ -1,6 +1,7 @@
 package com.sharemoment.ws.service;
 
-import com.sharemoment.ws.UserRepository;
+import com.sharemoment.ws.GenericResponse;
+import com.sharemoment.ws.repository.UserRepository;
 import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public void createNewUser(UserDto userDto) {
+    public GenericResponse createNewUser(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(userMapper.dtoToEntity(userDto));
-
+        return new GenericResponse("User Created");
     }
 
 }

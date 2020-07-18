@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {userRegister} from '../service/RegisterService'
+import Input from "./Input";
 
 
 class RegisterPage extends Component {
@@ -14,27 +15,35 @@ class RegisterPage extends Component {
             displayName: null,
             password: null,
             passwordRepeat: null,
-            pendingApiCall: false
+            pendingApiCall: false,
+            errors: {}
         }
     }
 
     onChangeTextArea = (event) => {
         const {name, value} = event.target;
-        this.setState({[name]: value})
+        const errors = {...this.state.errors};
+        errors[name] = undefined;
+        if (name === 'password' || name === 'passwordRepeat') {
+            if (name === 'password' && value !== this.state.passwordRepeat) {
+                errors.passwordRepeat = 'Password Mismatch';
+            } else if (name === 'passwordRepeat' && value !== this.state.password) {
+                errors.passwordRepeat = 'Password Mismatch';
+            } else {
+                errors.passwordRepeat = undefined;
+            }
+        }
+        this.setState({
+            [name]: value,
+            errors
+        })
     };
 
     register = async event => {
         event.preventDefault();
-
         const {userName, displayName, password} = this.state;
-        // const body = {
-        //     userName: userName,
-        //     displayName: displayName,
-        //     password: password
-        // };
-
         this.setState({pendingApiCall: true});
-        // İsimlendirmeler aynı olduğu zaman bu şekilde kullanılabilir
+
         const body = {
             userName,
             displayName,
@@ -43,59 +52,61 @@ class RegisterPage extends Component {
 
         try {
             const response = await userRegister(body);
-        } catch (e) {
-
+        } catch (error) {
+            if (error.response.data.validationErrors) {
+                this.setState({errors: error.response.data.validationErrors})
+            }
         }
-
         this.setState({pendingApiCall: false})
 
     };
 
     render() {
-        const {pendingApiCall} = this.state;
+        const {pendingApiCall, errors} = this.state;
+        const {userName, displayName, password, passwordRepeat} = errors;
         return (
             <div className="container">
                 <br/>
                 <form>
                     <h1 className="text-center">Sign Up</h1>
+                    {/* Input Component 'ini kendimiz Custom bir component haline getirdik*/}
                     <div className="text-left">
                         <label>Username</label>
-                        <InputText
-                            className="form-control"
-                            name="userName"
-                            value={this.state.userName}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="userName"
+                               value={this.state.userName}
+                               error={userName}
+                               onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Display Name</label>
-                        <InputText
-                            className="form-control"
-                            label="Display Name" name="displayName"
-                            value={this.state.displayName}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="displayName"
+                               value={this.state.displayName}
+                               error={displayName}
+                               onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Password</label>
-                        <InputText
-                            className="form-control"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="password"
+                               value={this.state.password}
+                               error={password}
+                               onChange={this.onChangeTextArea}/>
                     </div>
+                    <br/>
                     <div className="text-left">
                         <label>Password Repeat</label>
-                        <InputText
-                            className="form-control"
-                            name="passwordRepeat"
-                            value={this.state.passwordRepeat}
-                            onChange={this.onChangeTextArea}/>
+                        <Input name="passwordRepeat"
+                               value={this.state.passwordRepeat}
+                               error={passwordRepeat}
+                               onChange={this.onChangeTextArea}/>
                     </div>
                     <br/>
                     <div className="text-center">
                         <Button
                             className="btn btn-primary"
                             label="Register" onClick={this.register}
-                            disabled={pendingApiCall}>
+                            disabled={passwordRepeat !== undefined || pendingApiCall}>
                             {/*{this.state.pendingApiCall && <ProgressSpinner className="p-progress-circle"/>}*/}
                             {pendingApiCall && <span className="spinner-border spinner-border-sm"/>}
                         </Button>
