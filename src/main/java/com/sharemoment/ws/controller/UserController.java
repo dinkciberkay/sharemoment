@@ -1,6 +1,6 @@
 package com.sharemoment.ws.controller;
 
-import com.sharemoment.error.ApiError;
+import com.sharemoment.ws.error.ApiError;
 import com.sharemoment.ws.GenericResponse;
 import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.service.UserService;

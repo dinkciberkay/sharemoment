@@ -1,4 +1,4 @@
-package com.sharemoment.error;
+package com.sharemoment.ws.error;
 
 import lombok.Data;
 
