@@ -2,6 +2,7 @@ package com.sharemoment.ws.service;
 
 import com.sharemoment.ws.entity.UserEntity;
 import com.sharemoment.ws.error.ApiError;
+import com.sharemoment.ws.mapper.UserMapper;
 import com.sharemoment.ws.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -36,11 +40,12 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
         }
         String hashedPassword = userInDB.getPassword();
-        if(!passwordEncoder.matches(password,hashedPassword)){
+        if (!passwordEncoder.matches(password, hashedPassword)) {
             ApiError apiError = new ApiError(401, "Unauthorized Request", "/api/auth");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
         }
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(userMapper.entityToDto(userInDB));
 
     }
 

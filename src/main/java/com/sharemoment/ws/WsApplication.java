@@ -1,5 +1,6 @@
 package com.sharemoment.ws;
 
+import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.entity.UserEntity;
 import com.sharemoment.ws.repository.UserRepository;
 import com.sharemoment.ws.service.UserService;
@@ -18,15 +19,15 @@ public class WsApplication {
         SpringApplication.run(WsApplication.class, args);
     }
 
-//    //Uygulama ayağa kalkarken DB'ye inital data oluşturmak için kullanılabilir.
+    //Uygulama ayağa kalkarken DB'ye inital data oluşturmak için kullanılabilir.
 //    @Bean
-//    CommandLineRunner createInitialUser(UserRepository userRepository) {
-//        return (args) -> {
-//            UserEntity userEntity = new UserEntity();
-//            userEntity.setUserName("userInitialName");
-//            userEntity.setDisplayName("userInitialDisplayName");
-//            userEntity.setUserName("userInitialPassword");
-//            userRepository.save(userEntity);
+//    CommandLineRunner createInitialUser(UserService userService) {
+//        return args -> {
+//            UserDto userDto = new UserDto();
+//            userDto.setUserName("initialUserName");
+//            userDto.setDisplayName("initialDisplayName");
+//            userDto.setPassword("initialUserPassword");
+//            userService.createNewUser(userDto);
 //        };
 //    }
 
