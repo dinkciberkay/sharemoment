@@ -1,6 +1,5 @@
 package com.sharemoment.ws.configuration;
 
-import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
