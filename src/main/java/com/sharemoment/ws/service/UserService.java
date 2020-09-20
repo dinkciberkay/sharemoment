@@ -17,10 +17,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        //SecurityConfiguration içerisinde Bean oluşturarak bir password encoder olusturuyoruz.
+        //Spring context içerisinde artık böyle bir instance var ve burada inject edebiliriz.
+        this.passwordEncoder = passwordEncoder;
     }
 
     public GenericResponse createNewUser(UserDto userDto) {
