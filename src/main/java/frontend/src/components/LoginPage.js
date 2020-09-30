@@ -10,18 +10,20 @@ class LoginPage extends Component {
 
         this.state = {
             userName: null,
-            password: null
+            password: null,
+            error: null
         }
     }
 
     onChangeTextArea = (event) => {
         const {name, value} = event.target;
         this.setState({
-            [name]: value
+            [name]: value,
+            error: null
         })
     };
 
-    login = (event) => {
+    login = async event => {
         //Form içerisinde butona tıklama olayı submit eventi ile gerçekleşiyor.
         //Browserda bizim yerimize bir şeyleri submit etme olayını tetikliyor. Bunu durdurmak için preventDefault kullandık.
         event.preventDefault();
@@ -29,10 +31,21 @@ class LoginPage extends Component {
         const creds = {
             userName, password
         };
-        userLogin(creds);
+        this.setState({error: null}); // Login talebi devam ederken unauthorized yazmasını engellemek.
+        try {
+            await userLogin(creds);
+        } catch (apiError) { //bu error objesini axios üretiyor.
+            this.setState({
+                error: apiError.response.data.message
+            })
+        }
     };
 
     render() {
+
+        const {userName, password, error} = this.state;
+        const buttonEnabled = userName && password;
+
         return (
             <div className="container">
                 <form>
@@ -41,23 +54,25 @@ class LoginPage extends Component {
                     <div className="text-left">
                         <label>Username</label>
                         <Input name="userName"
-                               value={this.state.userName}
+                               value={userName}
                                onChange={this.onChangeTextArea}/>
                     </div>
                     <br/>
                     <div className="text-left">
                         <label>Password</label>
                         <Input name="password"
-                               value={this.state.password}
+                               value={password}
                                type="password"
                                onChange={this.onChangeTextArea}/>
                     </div>
                     <br/>
+                    {error && <div className="alert alert-danger">{error}</div>}
                     <div className="text-center">
                         <Button
                             className="btn btn-primary"
-                            label="Login" onClick={this.login}>
-                        </Button>
+                            label="Login" onClick={this.login}
+                            disabled={!buttonEnabled}
+                        />
                         <br/>
                     </div>
                 </form>

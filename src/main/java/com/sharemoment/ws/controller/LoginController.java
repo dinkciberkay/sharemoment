@@ -24,8 +24,13 @@ public class LoginController {
     @JsonView(Views.Base.class)
     //Cevap dönerken oluşturacağın Jsonları Views.Base classına göre oluştur.
     //Böylelikle passworde JsonView içerisinde Base classını göstermezsek Json içinde görünmez olacaktır.
-    public ResponseEntity handleAuthentication(@RequestHeader(name = "Authorization") String authorization) {
-        return loginService.handleAuthentication(authorization);
+//    public ResponseEntity handleAuthentication(@RequestHeader(name = "Authorization") String authorization) {
+    public ResponseEntity handleAuthentication() {
+        //Spring security ile birlikte biz user bilgisini ShareMomentUserDetails ile kullanıyoruz.
+        //Bu işlemleri burada tekrar yapıyor olmamız iyi değil, zaten user obj. Spring Security ile erişiyoruz.
+        //Artık Authorization headerı ile çekmeye ihtiyacımız yok.
+//        return loginService.handleAuthentication(authorization);
+        return loginService.handleAuthentication();
     }
 
     //Springin BadCredentials Exceptionlarını yakaladığında ApiError objesi döndürmesini sağlamaya çalıştık.
