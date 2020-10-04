@@ -1,6 +1,6 @@
 package com.sharemoment.ws.controller;
 
-import com.sharemoment.error.ApiError;
+import com.sharemoment.ws.error.ApiError;
 import com.sharemoment.ws.GenericResponse;
 import com.sharemoment.ws.dto.UserDto;
 import com.sharemoment.ws.service.UserService;
@@ -33,15 +33,16 @@ public class UserController {
         return userService.createNewUser(userDto);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(MethodArgumentNotValidException exception) {
-        ApiError apiError = new ApiError(400, "Validation Error", "/api/users");
-        Map<String, String> validationErrors = new HashMap<>();
-        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        apiError.setValidationErrors(validationErrors);
-        return apiError;
-    }
+    //Spring Security'e bırakıyoruz. Hata cevaplarını
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ApiError handleValidationException(MethodArgumentNotValidException exception) {
+//        ApiError apiError = new ApiError(400, "Validation Error", "/api/users");
+//        Map<String, String> validationErrors = new HashMap<>();
+//        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+//            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+//        }
+//        apiError.setValidationErrors(validationErrors);
+//        return apiError;
+//    }
 }
