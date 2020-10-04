@@ -3,6 +3,7 @@ import Input from "./Input";
 import {Button} from "primereact/button";
 import {userLogin} from '../service/LoginService';
 import axios from 'axios'
+import ButtonWithProgress from "./ButtonWithProgress";
 
 class LoginPage extends Component {
 
@@ -83,14 +84,9 @@ class LoginPage extends Component {
                     </div>
                     <br/>
                     {error && <div className="alert alert-danger">{error}</div>}
-                    <div className="text-center">
-                        <Button
-                            className="btn btn-primary"
-                            label="Login" onClick={this.login}
-                            disabled={!buttonEnabled || pendingApiCall}
-                        />
-                        <br/>
-                    </div>
+                    <ButtonWithProgress text="Login" onClick={this.login}
+                                        disabled={!buttonEnabled || pendingApiCall}
+                                        pendingApiCall={pendingApiCall}/>
                 </form>
             </div>
         )

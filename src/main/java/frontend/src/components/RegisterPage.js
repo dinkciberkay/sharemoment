@@ -3,6 +3,7 @@ import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {userRegister} from '../service/RegisterService'
 import Input from "./Input";
+import ButtonWithProgress from "./ButtonWithProgress";
 
 
 class RegisterPage extends Component {
@@ -102,15 +103,9 @@ class RegisterPage extends Component {
                                onChange={this.onChangeTextArea}/>
                     </div>
                     <br/>
-                    <div className="text-center">
-                        <Button
-                            className="btn btn-primary"
-                            label="Register" onClick={this.register}
-                            disabled={passwordRepeat !== undefined || pendingApiCall}>
-                            {/*{this.state.pendingApiCall && <ProgressSpinner className="p-progress-circle"/>}*/}
-                            {pendingApiCall && <span className="spinner-border spinner-border-sm"/>}
-                        </Button>
-                    </div>
+                    <ButtonWithProgress text="Register" onClick={this.register}
+                                        disabled={passwordRepeat !== undefined || pendingApiCall}
+                                        pendingApiCall={pendingApiCall}/>
                 </form>
             </div>
         )
