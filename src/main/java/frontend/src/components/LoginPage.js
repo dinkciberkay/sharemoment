@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Input from "./Input";
 import {Button} from "primereact/button";
 import {userLogin} from '../service/LoginService';
+import axios from 'axios'
 
 class LoginPage extends Component {
 
@@ -11,8 +12,23 @@ class LoginPage extends Component {
         this.state = {
             userName: null,
             password: null,
-            error: null
+            error: null,
+            pendingApiCall: false
         }
+    }
+
+    componentDidMount() {
+        axios.interceptors.request.use((request) => {
+            this.setState({pendingApiCall: true});
+            return request;
+        });
+        axios.interceptors.response.use((response) => {
+            this.setState({pendingApiCall: false});
+            return response;
+        }, (error) => {
+            this.setState({pendingApiCall: false});
+            throw error;
+        })
     }
 
     onChangeTextArea = (event) => {
@@ -43,7 +59,7 @@ class LoginPage extends Component {
 
     render() {
 
-        const {userName, password, error} = this.state;
+        const {userName, password, error, pendingApiCall} = this.state;
         const buttonEnabled = userName && password;
 
         return (
@@ -71,7 +87,7 @@ class LoginPage extends Component {
                         <Button
                             className="btn btn-primary"
                             label="Login" onClick={this.login}
-                            disabled={!buttonEnabled}
+                            disabled={!buttonEnabled || pendingApiCall}
                         />
                         <br/>
                     </div>
