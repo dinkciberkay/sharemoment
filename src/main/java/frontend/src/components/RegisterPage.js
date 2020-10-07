@@ -16,7 +16,6 @@ class RegisterPage extends Component {
             displayName: null,
             password: null,
             passwordRepeat: null,
-            pendingApiCall: false,
             errors: {}
         }
     }
@@ -43,7 +42,6 @@ class RegisterPage extends Component {
     register = async event => {
         event.preventDefault();
         const {userName, displayName, password} = this.state;
-        this.setState({pendingApiCall: true});
 
         const body = {
             userName,
@@ -58,13 +56,13 @@ class RegisterPage extends Component {
                 this.setState({errors: error.response.data.validationErrors})
             }
         }
-        this.setState({pendingApiCall: false})
 
     };
 
     render() {
-        const {pendingApiCall, errors} = this.state;
+        const {errors} = this.state;
         const {userName, displayName, password, passwordRepeat} = errors;
+        const {pendingApiCall} = this.props;
         return (
             <div className="container">
                 <br/>

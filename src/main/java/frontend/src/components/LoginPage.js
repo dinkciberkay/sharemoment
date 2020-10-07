@@ -13,23 +13,8 @@ class LoginPage extends Component {
         this.state = {
             userName: null,
             password: null,
-            error: null,
-            pendingApiCall: false
+            error: null
         }
-    }
-
-    componentDidMount() {
-        axios.interceptors.request.use((request) => {
-            this.setState({pendingApiCall: true});
-            return request;
-        });
-        axios.interceptors.response.use((response) => {
-            this.setState({pendingApiCall: false});
-            return response;
-        }, (error) => {
-            this.setState({pendingApiCall: false});
-            throw error;
-        })
     }
 
     onChangeTextArea = (event) => {
@@ -60,7 +45,9 @@ class LoginPage extends Component {
 
     render() {
 
-        const {userName, password, error, pendingApiCall} = this.state;
+        const {userName, password, error} = this.state;
+        //
+        const {pendingApiCall} = this.props;
         const buttonEnabled = userName && password;
 
         return (
