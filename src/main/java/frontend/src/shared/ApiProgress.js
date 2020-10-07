@@ -8,14 +8,23 @@ class ApiProgress extends Component {
 
     componentDidMount() {
         axios.interceptors.request.use((request) => {
-            this.setState({pendingApiCall: true});
+            if (request.url === this.props.path) {
+                //Buradaki işlem, biri request attığında aynı anda login ya da registerdan diğerinin de requesti atmasını engellemek
+                this.setState({pendingApiCall: true});
+            }
             return request;
         });
         axios.interceptors.response.use((response) => {
-            this.setState({pendingApiCall: false});
+            if (response.config.url === this.props.path) {
+                //Buradaki işlem, biri request attığında birinin sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
+                this.setState({pendingApiCall: false});
+            }
             return response;
         }, (error) => {
-            this.setState({pendingApiCall: false});
+            //Buradaki işlem, biri request attığında birinin hata sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
+            if (error.config.url === this.props.path) {
+                this.setState({pendingApiCall: false});
+            }
             throw error;
         })
     }
