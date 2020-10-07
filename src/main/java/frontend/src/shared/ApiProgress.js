@@ -7,27 +7,26 @@ class ApiProgress extends Component {
     };
 
     componentDidMount() {
-        axios.interceptors.request.use((request) => {
-            if (request.url === this.props.path) {
-                //Buradaki işlem, biri request attığında aynı anda login ya da registerdan diğerinin de requesti atmasını engellemek
-                this.setState({pendingApiCall: true});
-            }
+        axios.interceptors.request.use((request) => { //Buradaki işlem, biri request attığında aynı anda login ya da registerdan diğerinin de requesti atmasını engellemek
+            this.listenApiCall(request.url, true);
             return request;
         });
         axios.interceptors.response.use((response) => {
-            if (response.config.url === this.props.path) {
-                //Buradaki işlem, biri request attığında birinin sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
-                this.setState({pendingApiCall: false});
-            }
+            //Buradaki işlem, biri request attığında birinin sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
+            this.listenApiCall(response.config.url, false);
             return response;
-        }, (error) => {
-            //Buradaki işlem, biri request attığında birinin hata sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
-            if (error.config.url === this.props.path) {
-                this.setState({pendingApiCall: false});
-            }
+        }, (error) => { //Buradaki işlem, biri request attığında birinin hata sonucu döndüğünde diğerinin sonucunu aniden tamamlaması, isteğini bitirmesine imkan vermemesi sorununu engellemek
+            this.listenApiCall(error.config.url, false);
             throw error;
         })
     }
+
+    //Buradaki işlem, gelen url'e göre in progress'i setlemek.
+    listenApiCall = (url, inProgress) => {
+        if (url === this.props.path) {
+            this.setState({pendingApiCall: inProgress});
+        }
+    };
 
     render() {
         const {pendingApiCall} = this.state;
