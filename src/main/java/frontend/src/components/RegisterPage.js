@@ -4,6 +4,7 @@ import {Button} from "primereact/button";
 import {userRegister} from '../service/RegisterService'
 import Input from "./Input";
 import ButtonWithProgress from "./ButtonWithProgress";
+import {withApiProgress} from "../shared/ApiProgress";
 
 
 class RegisterPage extends Component {
@@ -110,4 +111,6 @@ class RegisterPage extends Component {
     }
 }
 
-export default RegisterPage;
+const RegisterPageWithProgress = withApiProgress(RegisterPage, '/api/users');
+
+export default RegisterPageWithProgress;

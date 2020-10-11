@@ -4,6 +4,7 @@ import {Button} from "primereact/button";
 import {userLogin} from '../service/LoginService';
 import axios from 'axios'
 import ButtonWithProgress from "./ButtonWithProgress";
+import {withApiProgress} from "../shared/ApiProgress";
 
 class LoginPage extends Component {
 
@@ -82,4 +83,6 @@ class LoginPage extends Component {
 
 }
 
-export default LoginPage;
+const LoginPageWithApiProgress = withApiProgress(LoginPage, "/api/auth");
+
+export default LoginPageWithApiProgress;
