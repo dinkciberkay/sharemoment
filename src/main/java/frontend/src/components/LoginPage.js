@@ -34,9 +34,13 @@ class LoginPage extends Component {
         const creds = {
             userName, password
         };
+        const {push} = this.props.history; //this.props içerisin de 'History' property si var. Bu bize bu componentin(LoginPage) React Router ile render edilmesi sonucu geliyor.
+                                           //içerisinde bulunan push fonksiyonunu kullanabiliriz. Yönlendirme yapabiliriz.
+
         this.setState({error: null}); // Login talebi devam ederken unauthorized yazmasını engellemek.
         try {
             await userLogin(creds);
+            push('/'); //Zaten success değil ise catch'e düşecek. React Router kullanarak ana sayfaya redirect yapmış oluyoruz.
         } catch (apiError) { //bu error objesini axios üretiyor.
             this.setState({
                 error: apiError.response.data.message
